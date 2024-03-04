@@ -66,22 +66,23 @@ function App() {
     } else if (data.header.type === 'urn:finvu:in:app:res.userLinkedAccount.01' && data.payload.status === 'SUCCESS') {
       setLinkedAccounts(data.payload.LinkedAccounts);
       // discoverAccounts
-      discoverAccounts(data.header.sid);
+      // discoverAccounts(data.header.sid);
       setCurrentScreen('linkedAccounts');
     } else if (data.header.type === 'urn:finvu:in:app:res.userLinkedAccount.01' && data.payload.status === 'RECORD-NOT-FOUND') {
       // do account discovery
       setLinkedAccounts([]);
       // call discover accounts for each bank.
-      discoverAccounts(data.header.sid);
+      discoverAccounts(data.header.sid, data.payload.userId);
       setCurrentScreen('linkedAccounts');
-      // setCurrentScreen('discoveredAccounts');
-    } else if (data.header.type === 'urn:finvu:in:app:res.discover.01' && data.payload.status === 'SUCCESS'){
-      setDiscoveredAccounts(data.payload.DiscoveredAccounts);
-        //show linked and discovered accounts
-    } else if (data.header.type === 'urn:finvu:in:app:res.discover.01' && data.payload.status === 'RECORD-NOT-FOUND'){
-      setDiscoveredAccounts([]);
-        // display any linked accounts, inform user no new accounts were discovered
     }
+      // setCurrentScreen('discoveredAccounts');
+    // } else if (data.header.type === 'urn:finvu:in:app:res.discover.01' && data.payload.status === 'SUCCESS'){
+    //   setDiscoveredAccounts(data.payload.DiscoveredAccounts);
+    //     //show linked and discovered accounts
+    // } else if (data.header.type === 'urn:finvu:in:app:res.discover.01' && data.payload.status === 'RECORD-NOT-FOUND'){
+    //   setDiscoveredAccounts([]);
+    //     // display any linked accounts, inform user no new accounts were discovered
+    // }
     // Handle other message types as needed
   };
 
@@ -151,15 +152,15 @@ function App() {
     }
   };
 
-  const discoverAccounts = (sid) => {
+  const discoverAccounts = (sid, userId) => {
     if (socket.current && socket.current.readyState === WebSocket.OPEN) {
       const payload = {
         ver: "1.1.2",
         timestamp: new Date().toISOString(),
         txnid: generateUUID(),
         Customer: {
-          id: "webdemo@finvu",
-          Identifiers: [{ category: "STRONG", type: "MOBILE", value: "8421068174" }]
+          id: "8698596991@finvu",
+          Identifiers: [{ category: "STRONG", type: "MOBILE", value: "8698596991" }]
         },
         FIPDetails: { fipId: "BARB0KIMXXX", fipName: "Finvu Bank" },
         FITypes: ["DEPOSIT", "RECURRING_DEPOSIT", "TERM-DEPOSIT"]
